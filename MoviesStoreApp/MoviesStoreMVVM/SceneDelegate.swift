@@ -5,18 +5,19 @@ import UIKit
 
 /// SceneDelegate
 final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    var coordinator: AppCoordinator?
     var window: UIWindow?
     func scene(
         _ scene: UIScene,
-        willConnectTo _: UISceneSession,
-        options _: UIScene.ConnectionOptions
+        willConnectTo session: UISceneSession,
+        options connectionOptions: UIScene.ConnectionOptions
     ) {
-        guard let applicationScene = (scene as? UIWindowScene) else { return }
-        window?.windowScene = applicationScene
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        window?.windowScene = windowScene
         window?.makeKeyAndVisible()
-
-        let startViewController = MoviesListViewController()
-        let navigationController = UINavigationController(rootViewController: startViewController)
-        window?.rootViewController = navigationController
+        let assemblyModelBuilder = AssemblyModuleBuilder()
+        coordinator = AppCoordinator(assemblyModeleBuilder: assemblyModelBuilder)
+        coordinator?.start()
     }
 }
