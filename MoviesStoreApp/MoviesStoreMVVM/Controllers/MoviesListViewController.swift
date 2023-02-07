@@ -14,38 +14,64 @@ final class MoviesListViewController: UIViewController {
         return segmentControl
     }()
 
+    private let activityIndicatorView = UIActivityIndicatorView()
+
+    // MARK: - Public Properties
+
+    var moviesListViewModel: MoviesListViewModelProtocol?
+    var onMovieInfoModule: IntHandler?
+    var moviesListState: MoviesListStates = .initial {
+        didSet {
+            DispatchQueue.main.async {
+                self.view.setNeedsLayout()
+            }
+        }
+    }
+
     // MARK: - Private properties
 
     private let sessionConfiguration = URLSessionConfiguration.default
     private let session = URLSession.shared
     private let decoder = JSONDecoder()
     private var movieInfo: MovieInfo?
-    private var movies: [Movies] = []
 
     // MARK: - Lifeсycle
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setupUI()
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        switch moviesListState {
+        case .initial:
+            setupUI()
+            activityIndicatorView.startAnimating()
+            moviesListTableView.isHidden = true
+        case .success:
+            moviesListTableView.isHidden = false
+            activityIndicatorView.isHidden = true
+            moviesListTableView.reloadData()
+        case let .failure(error):
+            showAlert(error: error)
+        }
     }
 
     // MARK: - Private methods
 
-    @objc private func segmentControlAction(_ segmentedControl: UISegmentedControl) {
-        switch segmentedControl.selectedSegmentIndex {
-        case 0:
-            moviesCollection(url: "\(URLRequest.baseURL)\(URLRequest.topRatedRequest)\(URLRequest.apiKey)")
-        case 1:
-            moviesCollection(url: "\(URLRequest.baseURL)\(URLRequest.popularRequest)\(URLRequest.apiKey)")
-        case 2:
-            moviesCollection(url: "\(URLRequest.baseURL)\(URLRequest.upcomingRequest)\(URLRequest.apiKey)")
-        default:
-            break
+    private func activityIndicator() {
+        activityIndicatorView.startAnimating()
+    }
+
+    private func setupMoviesListState() {
+        moviesListViewModel?.moviesListState = { [weak self] state in
+            self?.moviesListState = state
         }
     }
 
+    @objc private func segmentControlAction(_ segmentedControl: UISegmentedControl) {
+        moviesListViewModel?.fetchTypeMovies(index: segmentedControl.selectedSegmentIndex)
+    }
+
     private func setupUI() {
-        moviesCollection(url: "\(URLRequest.baseURL)\(URLRequest.popularRequest)\(URLRequest.apiKey)")
+        fetchMoviesList()
+        setupMoviesListState()
         addSegmentControl()
         setupTableView()
         setupConstraints()
@@ -54,7 +80,6 @@ final class MoviesListViewController: UIViewController {
     }
 
     private func addSegmentControl() {
-        let segmentItems = URLRequest.moviesCompilation
         view.addSubview(moviesCompilationSegmentControl)
         moviesCompilationSegmentControl.translatesAutoresizingMaskIntoConstraints = false
         moviesCompilationSegmentControl.addTarget(self, action: #selector(segmentControlAction(_:)), for: .valueChanged)
@@ -63,6 +88,8 @@ final class MoviesListViewController: UIViewController {
 
     private func setupTableView() {
         view.addSubview(moviesListTableView)
+        view.addSubview(activityIndicatorView)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
         moviesListTableView.register(
             MoviesListTableViewCell.self,
             forCellReuseIdentifier: Identifier.moviesListCellIdentifier
@@ -86,47 +113,50 @@ final class MoviesListViewController: UIViewController {
             moviesCompilationSegmentControl.rightAnchor.constraint(equalTo: view.rightAnchor),
             moviesCompilationSegmentControl.heightAnchor.constraint(equalToConstant: 50),
             moviesCompilationSegmentControl.widthAnchor.constraint(equalToConstant: 250),
+            activityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
 
-    private func moviesCollection(url: String) {
-        guard let url = URL(string: url) else { return }
-        session.dataTask(with: url) { data, _, error in
-            guard let data = data else { return }
-            do {
-                self.movies = try JSONDecoder().decode(Results.self, from: data).movies
-                DispatchQueue.main.async {
-                    self.moviesListTableView.reloadData()
-                }
-            } catch {
-                print(error)
-            }
-        }.resume()
+    private func fetchMoviesList() {
+        moviesListViewModel?.fetchMoviesData()
     }
 }
 
-// MARK: - UITableViewDelegate, UITableViewDataSource
+/// UITableViewDelegate, UITableViewDataSource
 
 extension MoviesListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        movies.count
+        moviesListViewModel?.movies.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: Identifier.moviesListCellIdentifier,
             for: indexPath
-        ) as? MoviesListTableViewCell
+        ) as? MoviesListTableViewCell,
+            let model = moviesListViewModel?.movies[indexPath.row],
+            let moviesListViewModel = moviesListViewModel
         else { return UITableViewCell() }
-        let model = movies[indexPath.row]
-        cell.refreshData(model)
+        cell.configure(model, moviesListViewModel: moviesListViewModel)
+        cell.alertDelegate = self
         return cell
     }
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movieID = movies[indexPath.row].movieId
-        let movieInfoViewController = MovieInfoViewController()
-        movieInfoViewController.movieID = movieID
-        navigationController?.pushViewController(movieInfoViewController, animated: true)
+        guard let movieID = moviesListViewModel?.movies[indexPath.row].movieId else { return }
+        onMovieInfoModule?(movieID)
+    }
+}
+
+/// AlertDelegateProtocol
+extension MoviesListViewController: AlertDelegateProtocol {
+    func showAlert(error: Error) {
+        showAlert(
+            title: Constants.errorTitle,
+            message: error.localizedDescription,
+            actionTitle: Constants.actionTitle,
+            handler: nil
+        )
     }
 }

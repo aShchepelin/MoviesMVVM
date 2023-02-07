@@ -5,6 +5,7 @@
 enum Identifier {
     static let moviesListCellIdentifier = "MoviesList"
     static let movieInfoCellIdentifier = "MovieInfo"
+    static let mainStoryboardIdentifier = "Main"
 }
 
 /// Константы с для работы с Api
@@ -27,4 +28,10 @@ enum Colors {
     static let whiteColorName = "white"
     static let grayColorName = "gray"
     static let redColorName = "red"
+}
+
+/// Константы
+enum Constants {
+    static let errorTitle = "Ошибка"
+    static let actionTitle = "Ok"
 }

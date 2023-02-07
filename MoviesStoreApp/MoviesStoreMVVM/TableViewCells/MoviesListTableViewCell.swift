@@ -44,6 +44,10 @@ final class MoviesListTableViewCell: UITableViewCell {
         return label
     }()
 
+    // MARK: - Public Properties
+
+    weak var alertDelegate: AlertDelegateProtocol?
+
     // MARK: - LifeCycle
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -53,12 +57,14 @@ final class MoviesListTableViewCell: UITableViewCell {
 
     // MARK: - Public Methods
 
-    func refreshData(_ model: Movies) {
+    func configure(_ model: Movies, moviesListViewModel: MoviesListViewModelProtocol) {
         titleLabel.text = model.title
-        posterImageView.loadFrom(URLAddress: "\(URLRequest.imageURL)\(model.poster)")
+        fetchImage(
+            url: model.poster,
+            moviesListViewModel: moviesListViewModel
+        )
         voteAverageLabel.text = "\(model.voteAverage)"
         originalTitleLabel.text = "\(model.originalTitle), \(model.releaseDate)"
-
         switch model.voteAverage {
         case 0 ... 5:
             voteAverageLabel.backgroundColor = UIColor(named: Colors.redColorName)
@@ -72,6 +78,18 @@ final class MoviesListTableViewCell: UITableViewCell {
     }
 
     // MARK: - Private Methods
+
+    private func fetchImage(url: String, moviesListViewModel: MoviesListViewModelProtocol) {
+        moviesListViewModel.fetchImage(url: url) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(data):
+                self.posterImageView.image = UIImage(data: data)
+            case let .failure(error):
+                self.alertDelegate?.showAlert(error: error)
+            }
+        }
+    }
 
     private func setupUI() {
         setupVisualComponents()

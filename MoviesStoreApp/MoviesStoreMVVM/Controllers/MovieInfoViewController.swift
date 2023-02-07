@@ -12,8 +12,7 @@ final class MovieInfoViewController: UIViewController {
 
     // MARK: - Public Properties
 
-    var movieInfo: MovieInfo?
-    var movieID: Int?
+    var movieInfoViewModel: MovieInfoViewModelProtocol?
 
     // MARK: - LifeCycle
 
@@ -28,24 +27,14 @@ final class MovieInfoViewController: UIViewController {
         setupTableView()
         movieInfoTableView.delegate = self
         movieInfoTableView.dataSource = self
-        moviesCollection()
+        fetchMovieInfo()
         setupConstraints()
+        updateView()
+        showErrorAlert()
     }
 
-    private func moviesCollection() {
-        guard let url = URL(string: "\(URLRequest.baseURL)\(movieID ?? 0)\(URLRequest.apiKey)")
-        else { return }
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data = data else { return }
-            do {
-                self.movieInfo = try JSONDecoder().decode(MovieInfo.self, from: data)
-                DispatchQueue.main.async {
-                    self.movieInfoTableView.reloadData()
-                }
-            } catch {
-                print(error)
-            }
-        }.resume()
+    private func fetchMovieInfo() {
+        movieInfoViewModel?.loadMovieInfo()
     }
 
     private func setupTableView() {
@@ -66,9 +55,27 @@ final class MovieInfoViewController: UIViewController {
             movieInfoTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
+
+    private func updateView() {
+        movieInfoViewModel?.updateView = { [weak self] in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.movieInfoTableView.reloadData()
+            }
+        }
+    }
+
+    private func showErrorAlert() {
+        movieInfoViewModel?.showErrorAlert = { [weak self] error in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.showAlert(error: error)
+            }
+        }
+    }
 }
 
-// MARK: - UITableViewDelegate, UITableViewDataSource
+/// UITableViewDelegate, UITableViewDataSource
 
 extension MovieInfoViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
@@ -80,11 +87,12 @@ extension MovieInfoViewController: UITableViewDelegate, UITableViewDataSource {
             withIdentifier: Identifier.movieInfoCellIdentifier,
             for: indexPath
         ) as? MovieInfoTableViewCell,
-            let model = movieInfo
+            let model = movieInfoViewModel?.movieInfo,
+            let movieInfoViewModel = movieInfoViewModel
         else {
             return UITableViewCell()
         }
-        cell.refreshData(model)
+        cell.configure(model, movieInfoViewModel: movieInfoViewModel)
         cell.delegate = self
         return cell
     }
@@ -93,7 +101,7 @@ extension MovieInfoViewController: UITableViewDelegate, UITableViewDataSource {
 /// ShowSafaryDelegate
 extension MovieInfoViewController: ShowSafaryDelegate {
     func showMovieInfo() {
-        guard let model = movieInfo else { return }
+        guard let model = movieInfoViewModel?.movieInfo else { return }
         let imdbLink = "\(URLRequest.baseImdbURL)\(model.imdbId)\(URLRequest.imdbTrailerURL)"
         if let url = URL(string: imdbLink) {
             let config = SFSafariViewController.Configuration()
@@ -101,5 +109,17 @@ extension MovieInfoViewController: ShowSafaryDelegate {
             let vc = SFSafariViewController(url: url, configuration: config)
             present(vc, animated: true)
         }
+    }
+}
+
+/// AlertDelegateProtocol
+extension MovieInfoViewController: AlertDelegateProtocol {
+    func showAlert(error: Error) {
+        showAlert(
+            title: Constants.errorTitle,
+            message: error.localizedDescription,
+            actionTitle: Constants.actionTitle,
+            handler: nil
+        )
     }
 }
