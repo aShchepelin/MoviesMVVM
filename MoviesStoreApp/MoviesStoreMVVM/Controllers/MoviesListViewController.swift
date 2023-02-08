@@ -28,32 +28,33 @@ final class MoviesListViewController: UIViewController {
         }
     }
 
-    // MARK: - Private properties
-
-    private let sessionConfiguration = URLSessionConfiguration.default
-    private let session = URLSession.shared
-    private let decoder = JSONDecoder()
-    private var movieInfo: MovieInfo?
-
     // MARK: - Lifeсycle
 
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         switch moviesListState {
         case .initial:
-            setupUI()
-            activityIndicatorView.startAnimating()
-            moviesListTableView.isHidden = true
+            initialStateView()
         case .success:
-            moviesListTableView.isHidden = false
-            activityIndicatorView.isHidden = true
-            moviesListTableView.reloadData()
+            successStateView()
         case let .failure(error):
             showAlert(error: error)
         }
     }
 
     // MARK: - Private methods
+
+    private func initialStateView() {
+        setupUI()
+        activityIndicatorView.startAnimating()
+        moviesListTableView.isHidden = true
+    }
+
+    private func successStateView() {
+        moviesListTableView.isHidden = false
+        activityIndicatorView.isHidden = true
+        moviesListTableView.reloadData()
+    }
 
     private func activityIndicator() {
         activityIndicatorView.startAnimating()

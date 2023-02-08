@@ -5,15 +5,11 @@ import Foundation
 
 /// Протокол для вью модели экрана списка фильмов
 protocol MoviesListViewModelProtocol {
-    // MARK: - Public Properties
-
-    var updateView: VoidHandler? { get set }
-    var showErrorAlert: ErrorHandler? { get set }
-    var movies: [Movies] { get set }
-    var moviesAPIService: MoviesAPIServiceProtocol { get set }
+    var updateView: VoidHandler? { get }
+    var showErrorAlert: ErrorHandler? { get }
+    var movies: [Movies] { get }
+    var moviesAPIService: MoviesAPIServiceProtocol { get }
     var moviesListState: ((MoviesListStates) -> ())? { get set }
-
-    // MARK: - Public Methods
 
     func fetchMoviesData()
     func fetchTypeMovies(index: Int)

@@ -5,8 +5,6 @@ import UIKit
 
 /// Протокол билдера
 protocol AssemblyBuilderProtocol {
-    // MARK: - Public Methods
-
     func makeMovieInfoModel(_ movieID: Int?) -> UIViewController
     func makeMoviesListModel() -> UIViewController
 }

@@ -25,7 +25,7 @@ final class AppCoordinator: BaseCoordinator {
     // MARK: - Private Methods
 
     private func toMovieList(assemblyModuleBuilder: AssemblyBuilderProtocol) {
-        let coordinator = MoviesListCoordinator(assemblyModuleBuilder: assemblyModuleBuilder)
+        let coordinator = MoviesCoordinator(assemblyModuleBuilder: assemblyModuleBuilder)
         addDependency(coordinator)
         coordinator.start()
     }
