@@ -3,11 +3,6 @@
 
 import UIKit
 
-typealias Closure = ((String) -> Void)?
-typealias VoidHandler = () -> ()
-typealias IntHandler = (Int) -> (Void)
-typealias ErrorHandler = (Error) -> (Void)
-
 /// Универсальные алерты
 extension UIViewController {
     func showAlert(

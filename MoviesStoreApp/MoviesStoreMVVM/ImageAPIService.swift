@@ -5,7 +5,7 @@ import Foundation
 
 /// Сервис загрузки изображения из сети
 final class ImageAPIService: ImageAPIServiceProtocol {
-    // MARK: - Public Properties
+    // MARK: - Private Properties
 
     private var dataTask: URLSessionDataTask?
 
