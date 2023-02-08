@@ -17,6 +17,8 @@ final class MovieInfoTableViewCell: UITableViewCell {
         static let imdbLogoName = "IMDBLogo"
         static let hoursText = "ч"
         static let minutesText = "мин"
+        static let separator = "-"
+        static let oneMinuteInSeconds = 60
     }
 
     // MARK: - Private Visual Components
@@ -106,6 +108,7 @@ final class MovieInfoTableViewCell: UITableViewCell {
     // MARK: - Public Properties
 
     weak var delegate: ShowSafaryDelegate?
+    weak var alertDelegate: AlertDelegateProtocol?
 
     // MARK: - Initializers
 
@@ -121,27 +124,41 @@ final class MovieInfoTableViewCell: UITableViewCell {
 
     // MARK: - Public Methods
 
-    func refreshData(_ model: MovieInfo) {
+    func configure(_ model: MovieInfo, movieInfoViewModel: MovieInfoViewModelProtocol) {
         var genres = ""
         var countries = ""
         for item in model.genres {
             genres += " \(item.name)"
         }
-
         for item in model.productionCountries {
             countries += " \(item.name)"
         }
-        let year = model.releaseDate.components(separatedBy: "-")
+        let year = model.releaseDate.components(separatedBy: Constants.separator)
         titleLabel.text = model.title
-        posterImageView.loadFrom(URLAddress: "\(URLRequest.imageURL)\(model.poster)")
+        fetchImage(
+            url: model.poster,
+            movieInfoViewModel: movieInfoViewModel
+        )
         yearAndGenresLabel.text = "\(year.first ?? "") \(genres)"
         originalTitleLabel.text = "\(model.originalTitle)"
-        countryAndRuntimeLabel.text = "\(countries), \((model.runtime) / 60) " +
-            "\(Constants.hoursText) \((model.runtime) % 60) \(Constants.minutesText)"
+        countryAndRuntimeLabel.text = "\(countries), \((model.runtime) / Constants.oneMinuteInSeconds) " +
+            "\(Constants.hoursText) \((model.runtime) % Constants.oneMinuteInSeconds) \(Constants.minutesText)"
         overviewLabel.text = model.overview
     }
 
     // MARK: - Private Methods
+
+    private func fetchImage(url: String, movieInfoViewModel: MovieInfoViewModelProtocol) {
+        movieInfoViewModel.fetchImage(url: url) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(data):
+                self.posterImageView.image = UIImage(data: data)
+            case let .failure(error):
+                self.alertDelegate?.showAlert(error: error)
+            }
+        }
+    }
 
     @objc private func showImdbInfoAction() {
         delegate?.showMovieInfo()
