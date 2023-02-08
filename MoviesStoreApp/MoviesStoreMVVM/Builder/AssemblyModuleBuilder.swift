@@ -1,5 +1,5 @@
 // AssemblyModuleBuilder.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import UIKit
 
@@ -8,8 +8,9 @@ final class AssemblyModuleBuilder: AssemblyBuilderProtocol {
     // MARK: - Public Methods
 
     func makeMovieInfoModel(_ movieID: Int?) -> UIViewController {
+        let keyChainService = KeyChainService()
         let view = MovieInfoViewController()
-        let moviesAPIService = MoviesAPIService()
+        let moviesAPIService = MoviesAPIService(keyChainService: keyChainService)
         let networkService = NetworkService(moviesAPIService: moviesAPIService)
         let imageService = ImageService()
         let viewModel = MovieInfoViewModel(
@@ -23,13 +24,15 @@ final class AssemblyModuleBuilder: AssemblyBuilderProtocol {
 
     func makeMoviesListModel() -> UIViewController {
         let view = MoviesListViewController()
-        let moviesAPIService = MoviesAPIService()
+        let keyChainService = KeyChainService()
+        let moviesAPIService = MoviesAPIService(keyChainService: keyChainService)
         let networkService = NetworkService(moviesAPIService: moviesAPIService)
         let imageService = ImageService()
         let viewModel = MoviesListViewModel(
             networkService: networkService,
             imageService: imageService,
-            moviesAPIService: moviesAPIService
+            moviesAPIService: moviesAPIService,
+            keyChainService: keyChainService
         )
         view.moviesListViewModel = viewModel
         return view

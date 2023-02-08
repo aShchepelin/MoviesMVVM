@@ -1,15 +1,25 @@
 // MoviesAPIService.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import Foundation
 
 /// Сервис по работе с запросами
 final class MoviesAPIService: MoviesAPIServiceProtocol {
+    // MARK: - Public Properties
+
+    var keyChainService: KeyChainServiceProtocol?
+
+    // MARK: - Init
+
+    init(keyChainService: KeyChainServiceProtocol) {
+        self.keyChainService = keyChainService
+    }
+
     // MARK: - Public Methods
 
     func sendMovieInfoRequest(movieID: Int, completion: @escaping (Result<MovieInfo, Error>) -> Void) {
         guard let url = URL(
-            string: "\(URLRequest.baseURL)\(movieID)\(URLRequest.apiKey)"
+            string: "\(URLRequest.baseURL)\(movieID)\(keyChainService?.getValue(Constants.keyChainKey) ?? "")"
         ) else { return }
         URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data else { return }
@@ -25,7 +35,7 @@ final class MoviesAPIService: MoviesAPIServiceProtocol {
 
     func sendMoviesRequest(movieType: String, completion: @escaping (Result<Results, Error>) -> Void) {
         guard let url = URL(
-            string: "\(URLRequest.baseURL)\(movieType)\(URLRequest.apiKey)"
+            string: "\(URLRequest.baseURL)\(movieType)\(keyChainService?.getValue(Constants.keyChainKey) ?? "")"
         ) else { return }
         URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data else { return }

@@ -1,5 +1,5 @@
 // AssemblyBuilderProtocol.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import UIKit
 

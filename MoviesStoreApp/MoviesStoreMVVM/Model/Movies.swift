@@ -1,5 +1,5 @@
 // Movies.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 /// Модель фильмов
 struct Movies: Codable {

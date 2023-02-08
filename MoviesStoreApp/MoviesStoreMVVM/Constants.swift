@@ -1,5 +1,5 @@
 // Constants.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 /// Идентификаторы
 enum Identifier {
@@ -16,7 +16,7 @@ enum URLRequest {
     static let upcomingRequest = "upcoming"
     static let baseURL = "https://api.themoviedb.org/3/movie/"
     static let imageURL = "https://image.tmdb.org/t/p/w500"
-    static let apiKey = "?api_key=301bf8bb0ae60538292cdebf5a3021dd&language=ru-RU"
+//    static let apiKey = "?api_key=301bf8bb0ae60538292cdebf5a3021dd&language=ru-RU"
     static let baseImdbURL = "https://www.imdb.com/title/"
     static let imdbTrailerURL = "/?ref_=nv_sr_srsg_0"
     static let creditsURL = "/credits"
@@ -34,4 +34,8 @@ enum Colors {
 enum Constants {
     static let errorTitle = "Ошибка"
     static let actionTitle = "Ok"
+    static let keyChainKey = "api"
+    static let alertTitleText = "Вход в приложение"
+    static let alertMessageText = "Введите ключ"
+    static let emptyString = ""
 }

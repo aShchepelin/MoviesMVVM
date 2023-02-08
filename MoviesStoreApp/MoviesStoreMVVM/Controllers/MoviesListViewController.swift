@@ -1,5 +1,5 @@
 // MoviesListViewController.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import UIKit
 
@@ -44,7 +44,25 @@ final class MoviesListViewController: UIViewController {
 
     // MARK: - Private methods
 
+    private func keyChainAlert() {
+        showKeyChainAlert(
+            title: Constants.alertTitleText,
+            message: Constants.alertMessageText,
+            actionTitle: Constants.actionTitle
+        ) { [weak self] apiKey in
+            guard let self = self else { return }
+            self.moviesListViewModel?.keyChainInfo()?.setValue(
+                apiKey,
+                forKey: Constants.keyChainKey
+            )
+        }
+    }
+
     private func initialStateView() {
+//        moviesListViewModel?.keyChainInfo()?.setValue("", forKey: Constants.keyChainKey)
+        if moviesListViewModel?.keyChainInfo()?.getValue(Constants.keyChainKey) == Constants.emptyString {
+            keyChainAlert()
+        }
         setupUI()
         activityIndicatorView.startAnimating()
         moviesListTableView.isHidden = true

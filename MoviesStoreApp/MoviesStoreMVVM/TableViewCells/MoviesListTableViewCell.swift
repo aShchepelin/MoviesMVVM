@@ -1,5 +1,5 @@
 // MoviesListTableViewCell.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import UIKit
 
@@ -53,6 +53,10 @@ final class MoviesListTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         setupUI()
+    }
+
+    override func prepareForReuse() {
+        posterImageView.image = nil
     }
 
     // MARK: - Public Methods
