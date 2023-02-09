@@ -7,7 +7,8 @@ import Foundation
 protocol MoviesListViewModelProtocol {
     var updateView: VoidHandler? { get }
     var showErrorAlert: ErrorHandler? { get }
-    var movies: [Movies] { get }
+    var coreDataErrorHandler: CoreDataHandler? { get set }
+    var movies: [Movie] { get }
     var moviesAPIService: MoviesAPIServiceProtocol { get }
     var moviesListState: ((MoviesListStates) -> ())? { get set }
 

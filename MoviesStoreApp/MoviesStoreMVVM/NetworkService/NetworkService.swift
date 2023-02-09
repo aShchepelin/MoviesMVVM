@@ -17,7 +17,7 @@ final class NetworkService: NetworkServiceProtocol {
 
     // MARK: - Public Methods
 
-    func fetchMovies(moviesType: String, completion: @escaping (Result<[Movies], Error>) -> Void) {
+    func fetchMovies(moviesType: String, completion: @escaping (Result<[Movie], Error>) -> Void) {
         moviesAPIService.sendMoviesRequest(movieType: moviesType) { result in
             switch result {
             case let .success(data):

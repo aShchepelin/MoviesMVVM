@@ -16,10 +16,19 @@ enum URLRequest {
     static let upcomingRequest = "upcoming"
     static let baseURL = "https://api.themoviedb.org/3/movie/"
     static let imageURL = "https://image.tmdb.org/t/p/w500"
-//    static let apiKey = "?api_key=301bf8bb0ae60538292cdebf5a3021dd&language=ru-RU"
     static let baseImdbURL = "https://www.imdb.com/title/"
     static let imdbTrailerURL = "/?ref_=nv_sr_srsg_0"
     static let creditsURL = "/credits"
+}
+
+enum CoreDataConstants {
+    static let movieInfoData = "MovieInfoData"
+    static let movieData = "MovieData"
+    static let genresData = "GenresData"
+    static let productionCountriesData = "ProductionCountriesData"
+    static let movieIDPredicate = "movieId = %i"
+    static let movieDataPredicate = "movieType = %@"
+    static let movieDataModel = "MovieDataModel"
 }
 
 /// Цвета из ассетов

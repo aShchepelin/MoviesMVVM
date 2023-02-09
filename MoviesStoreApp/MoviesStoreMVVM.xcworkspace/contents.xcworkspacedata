@@ -2,6 +2,30 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:GenresData+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:GenresData+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:ProductionCountriesData+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:ProductionCountriesData+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:MovieInfoData+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:MovieInfoData+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:MovieData+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:MovieData+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
       location = "group:MoviesStoreMVVM.xcodeproj">
    </FileRef>
    <FileRef

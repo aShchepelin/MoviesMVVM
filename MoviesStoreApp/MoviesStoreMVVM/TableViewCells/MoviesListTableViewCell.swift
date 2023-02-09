@@ -61,7 +61,7 @@ final class MoviesListTableViewCell: UITableViewCell {
 
     // MARK: - Public Methods
 
-    func configure(_ model: Movies, moviesListViewModel: MoviesListViewModelProtocol) {
+    func configure(_ model: Movie, moviesListViewModel: MoviesListViewModelProtocol) {
         titleLabel.text = model.title
         fetchImage(
             url: model.poster,

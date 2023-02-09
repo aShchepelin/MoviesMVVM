@@ -11,12 +11,14 @@ final class AssemblyModuleBuilder: AssemblyBuilderProtocol {
         let keyChainService = KeyChainService()
         let view = MovieInfoViewController()
         let moviesAPIService = MoviesAPIService(keyChainService: keyChainService)
+        let coreDataService = CoreDataService(modelName: CoreDataConstants.movieDataModel)
         let networkService = NetworkService(moviesAPIService: moviesAPIService)
         let imageService = ImageService()
         let viewModel = MovieInfoViewModel(
             networkService: networkService,
             movieID: movieID ?? 0,
-            imageService: imageService
+            imageService: imageService,
+            coreDataService: coreDataService
         )
         view.movieInfoViewModel = viewModel
         return view
@@ -25,6 +27,7 @@ final class AssemblyModuleBuilder: AssemblyBuilderProtocol {
     func makeMoviesListModel() -> UIViewController {
         let view = MoviesListViewController()
         let keyChainService = KeyChainService()
+        let coreDataService = CoreDataService(modelName: CoreDataConstants.movieDataModel)
         let moviesAPIService = MoviesAPIService(keyChainService: keyChainService)
         let networkService = NetworkService(moviesAPIService: moviesAPIService)
         let imageService = ImageService()
@@ -32,7 +35,8 @@ final class AssemblyModuleBuilder: AssemblyBuilderProtocol {
             networkService: networkService,
             imageService: imageService,
             moviesAPIService: moviesAPIService,
-            keyChainService: keyChainService
+            keyChainService: keyChainService,
+            coreDataService: coreDataService
         )
         view.moviesListViewModel = viewModel
         return view

@@ -10,5 +10,5 @@ struct Results: Codable {
     }
 
     /// Фильмы
-    let movies: [Movies]
+    let movies: [Movie]
 }

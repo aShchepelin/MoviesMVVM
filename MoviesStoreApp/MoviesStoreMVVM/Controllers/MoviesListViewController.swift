@@ -55,11 +55,20 @@ final class MoviesListViewController: UIViewController {
                 apiKey,
                 forKey: Constants.keyChainKey
             )
+            self.fetchMoviesList()
+            self.moviesListTableView.reloadData()
+        }
+    }
+
+    private func showCoreDataErrorAlert() {
+        moviesListViewModel?.coreDataErrorHandler = { [weak self] error in
+            DispatchQueue.main.async {
+                self?.showCoreDataAlert(error: error)
+            }
         }
     }
 
     private func initialStateView() {
-//        moviesListViewModel?.keyChainInfo()?.setValue("", forKey: Constants.keyChainKey)
         if moviesListViewModel?.keyChainInfo()?.getValue(Constants.keyChainKey) == Constants.emptyString {
             keyChainAlert()
         }
@@ -96,6 +105,7 @@ final class MoviesListViewController: UIViewController {
         setupConstraints()
         moviesListTableView.delegate = self
         moviesListTableView.dataSource = self
+        showCoreDataErrorAlert()
     }
 
     private func addSegmentControl() {
@@ -164,7 +174,7 @@ extension MoviesListViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let movieID = moviesListViewModel?.movies[indexPath.row].movieId else { return }
-        onMovieInfoModule?(movieID)
+        onMovieInfoModule?(Int(movieID))
     }
 }
 
@@ -174,6 +184,15 @@ extension MoviesListViewController: AlertDelegateProtocol {
         showAlert(
             title: Constants.errorTitle,
             message: error.localizedDescription,
+            actionTitle: Constants.actionTitle,
+            handler: nil
+        )
+    }
+
+    func showCoreDataAlert(error: String) {
+        showAlert(
+            title: Constants.errorTitle,
+            message: error,
             actionTitle: Constants.actionTitle,
             handler: nil
         )

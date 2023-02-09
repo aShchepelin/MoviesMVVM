@@ -1,20 +1,21 @@
 // AppDelegate.swift
 // Copyright © Aleksandr Shchepelin. All rights reserved.
 
+import CoreData
 import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
-    func application(
-        _: UIApplication,
-        didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?
-    ) -> Bool {
-        window = UIWindow(frame: UIScreen.main.bounds)
+    // MARK: - Core Data stack
 
-        let viewController = MoviesListViewController()
-        window?.rootViewController = viewController
-        window?.makeKeyAndVisible()
-        return true
-    }
+    lazy var coreDataStack: CoreDataService = .init(modelName: CoreDataConstants.movieDataModel)
+
+    static let sharedAppDelegate: AppDelegate = {
+        guard let delegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError(
+                "\(String(describing: UIApplication.shared.delegate))"
+            )
+        }
+        return delegate
+    }()
 }
