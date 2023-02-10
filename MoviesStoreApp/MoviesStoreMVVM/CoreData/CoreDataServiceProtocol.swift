@@ -7,7 +7,7 @@ import Foundation
 protocol CoreDataServiceProtocol {
     var errorHandler: CoreDataHandler? { get set }
     func saveMovieDataContext(movies: [Movie], movieType: String)
-    func saveMovieInfoDataContext(movieInfo: MovieInfo, movieID: Int)
+    func saveMovieInfoDataContext(movieInfo: MovieInfo)
     func getMovieInfoData(movieID: Int) -> MovieInfo?
     func getMovieData(movieType: String) -> [Movie]
 }

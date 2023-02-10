@@ -10,23 +10,37 @@ public extension MovieInfoData {
         NSFetchRequest<MovieInfoData>(entityName: "MovieInfoData")
     }
 
+    /// Постер
     @NSManaged var poster: String?
+    /// Возрастное ограничение
     @NSManaged var adult: Bool
+    /// Название на оригинальном языке
     @NSManaged var originalTitle: String?
+    /// Описание фильма
     @NSManaged var overview: String?
+    /// Дата релиза
     @NSManaged var releaseDate: String?
+    /// Идентификатор фильма
     @NSManaged var movieId: Int64
+    /// Название фильма
     @NSManaged var title: String?
+    /// Рейтинг популярности
     @NSManaged var popularity: Float
+    /// Количество голосов
     @NSManaged var voteCount: Int64
+    /// Средняя оценка
     @NSManaged var voteAverage: Float
+    /// Длительность фильма
     @NSManaged var runtime: Int64
+    /// Идентификатор IMDB
     @NSManaged var imdbId: String?
+    /// Жанры
     @NSManaged var genres: NSSet?
+    /// Страна производства
     @NSManaged var productionCountry: NSSet?
 }
 
-// MARK: Generated accessors for genres
+/// Generated accessors for genres
 
 public extension MovieInfoData {
     @objc(addGenresObject:)
@@ -42,7 +56,7 @@ public extension MovieInfoData {
     @NSManaged func removeFromGenres(_ values: NSSet)
 }
 
-// MARK: Generated accessors for productionCountry
+/// Generated accessors for productionCountry
 
 public extension MovieInfoData {
     @objc(addProductionCountryObject:)

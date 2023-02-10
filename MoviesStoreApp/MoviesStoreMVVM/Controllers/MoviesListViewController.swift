@@ -69,6 +69,7 @@ final class MoviesListViewController: UIViewController {
     }
 
     private func initialStateView() {
+        moviesListViewModel?.keyChainInfo()?.setValue("", forKey: Constants.keyChainKey)
         if moviesListViewModel?.keyChainInfo()?.getValue(Constants.keyChainKey) == Constants.emptyString {
             keyChainAlert()
         }
@@ -174,7 +175,7 @@ extension MoviesListViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let movieID = moviesListViewModel?.movies[indexPath.row].movieId else { return }
-        onMovieInfoModule?(Int(movieID))
+        onMovieInfoModule?(movieID)
     }
 }
 

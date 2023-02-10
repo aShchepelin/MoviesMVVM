@@ -10,6 +10,7 @@ public extension GenresData {
         NSFetchRequest<GenresData>(entityName: "GenresData")
     }
 
+    /// Название жанра
     @NSManaged var name: String?
     @NSManaged var movieInfo: MovieInfoData?
 }

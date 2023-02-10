@@ -10,6 +10,7 @@ public extension ProductionCountriesData {
         NSFetchRequest<ProductionCountriesData>(entityName: "ProductionCountriesData")
     }
 
+    /// Название страны производства
     @NSManaged var name: String?
     @NSManaged var movieInfo: MovieInfoData?
 }

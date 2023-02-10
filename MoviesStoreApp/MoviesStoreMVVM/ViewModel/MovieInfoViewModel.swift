@@ -65,10 +65,7 @@ final class MovieInfoViewModel: MovieInfoViewModelProtocol {
             guard let self = self else { return }
             switch result {
             case let .success(movie):
-                self.coreDataService?.saveMovieInfoDataContext(
-                    movieInfo: movie,
-                    movieID: self.movieID ?? 0
-                )
+                self.coreDataService?.saveMovieInfoDataContext(movieInfo: movie)
                 self.movieInfo = movie
                 self.updateView?()
             case let .failure(error):

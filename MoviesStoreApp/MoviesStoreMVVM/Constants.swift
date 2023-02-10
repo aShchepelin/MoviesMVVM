@@ -16,6 +16,10 @@ enum URLRequest {
     static let upcomingRequest = "upcoming"
     static let baseURL = "https://api.themoviedb.org/3/movie/"
     static let imageURL = "https://image.tmdb.org/t/p/w500"
+    static let apiKey = "api_key"
+    static let languageKey = "language"
+    static let languageValue = "ru-RU"
+
     static let baseImdbURL = "https://www.imdb.com/title/"
     static let imdbTrailerURL = "/?ref_=nv_sr_srsg_0"
     static let creditsURL = "/credits"

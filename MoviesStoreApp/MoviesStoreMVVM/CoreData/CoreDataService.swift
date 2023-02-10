@@ -7,11 +7,11 @@ import CoreData
 final class CoreDataService: CoreDataServiceProtocol {
     // MARK: - Public Properties
 
-    lazy var managedContext: NSManagedObjectContext = self.storeContainer.viewContext
     var errorHandler: CoreDataHandler?
 
     // MARK: - Private Properties
 
+    private lazy var managedContext: NSManagedObjectContext = self.storeContainer.viewContext
     private let modelName: String
     private lazy var storeContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: self.modelName)
@@ -59,7 +59,7 @@ final class CoreDataService: CoreDataServiceProtocol {
         }
     }
 
-    func saveMovieInfoDataContext(movieInfo: MovieInfo, movieID: Int) {
+    func saveMovieInfoDataContext(movieInfo: MovieInfo) {
         guard let newMovieInfo = NSEntityDescription.entity(
             forEntityName: CoreDataConstants.movieInfoData,
             in: managedContext
@@ -170,7 +170,7 @@ final class CoreDataService: CoreDataServiceProtocol {
                     adult: movie.adult,
                     originalTitle: movie.originalTitle ?? "",
                     overview: movie.overview ?? "",
-                    releaseDate: movie.originalTitle ?? "",
+                    releaseDate: movie.releaseDate ?? "",
                     movieId: Int(movie.movieId),
                     title: movie.title ?? "",
                     popularity: movie.popularity,

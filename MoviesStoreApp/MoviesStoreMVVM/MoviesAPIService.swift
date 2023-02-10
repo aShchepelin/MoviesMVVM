@@ -5,9 +5,9 @@ import Foundation
 
 /// Сервис по работе с запросами
 final class MoviesAPIService: MoviesAPIServiceProtocol {
-    // MARK: - Public Properties
+    // MARK: - Private Properties
 
-    var keyChainService: KeyChainServiceProtocol?
+    private var keyChainService: KeyChainServiceProtocol?
 
     // MARK: - Init
 
@@ -18,9 +18,12 @@ final class MoviesAPIService: MoviesAPIServiceProtocol {
     // MARK: - Public Methods
 
     func sendMovieInfoRequest(movieID: Int, completion: @escaping (Result<MovieInfo, Error>) -> Void) {
-        guard let url = URL(
-            string: "\(URLRequest.baseURL)\(movieID)\(keyChainService?.getValue(Constants.keyChainKey) ?? "")"
-        ) else { return }
+        guard var urlComponetnts = URLComponents(string: "\(URLRequest.baseURL)\(movieID)") else { return }
+        urlComponetnts.queryItems = [
+            URLQueryItem(name: URLRequest.apiKey, value: keyChainService?.getValue(Constants.keyChainKey)),
+            URLQueryItem(name: URLRequest.languageKey, value: URLRequest.languageValue)
+        ]
+        guard let url = urlComponetnts.url else { return }
         URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data else { return }
             do {
@@ -34,9 +37,12 @@ final class MoviesAPIService: MoviesAPIServiceProtocol {
     }
 
     func sendMoviesRequest(movieType: String, completion: @escaping (Result<Results, Error>) -> Void) {
-        guard let url = URL(
-            string: "\(URLRequest.baseURL)\(movieType)\(keyChainService?.getValue(Constants.keyChainKey) ?? "")"
-        ) else { return }
+        guard var urlComponetnts = URLComponents(string: "\(URLRequest.baseURL)\(movieType)") else { return }
+        urlComponetnts.queryItems = [
+            URLQueryItem(name: URLRequest.apiKey, value: keyChainService?.getValue(Constants.keyChainKey)),
+            URLQueryItem(name: URLRequest.languageKey, value: URLRequest.languageValue)
+        ]
+        guard let url = urlComponetnts.url else { return }
         URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data else { return }
             do {
