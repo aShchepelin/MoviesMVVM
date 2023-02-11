@@ -69,7 +69,6 @@ final class MoviesListViewController: UIViewController {
     }
 
     private func initialStateView() {
-        moviesListViewModel?.keyChainInfo()?.setValue("", forKey: Constants.keyChainKey)
         if moviesListViewModel?.keyChainInfo()?.getValue(Constants.keyChainKey) == Constants.emptyString {
             keyChainAlert()
         }

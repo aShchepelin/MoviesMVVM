@@ -122,9 +122,9 @@ final class CoreDataService: CoreDataServiceProtocol {
         let fetchRequest: NSFetchRequest<MovieInfoData> = MovieInfoData.fetchRequest()
         fetchRequest.predicate = predicate
         do {
-            guard let movieInfoObject = try? managedContext.fetch(fetchRequest).first else { return nil }
-            guard let genresData = movieInfoObject.genres?.allObjects as? [GenresData] else { return nil }
-            guard let countryData = movieInfoObject.productionCountry?.allObjects as? [ProductionCountriesData]
+            guard let movieInfoObject = try? managedContext.fetch(fetchRequest).first,
+                  let genresData = movieInfoObject.genres?.allObjects as? [GenresData],
+                  let countryData = movieInfoObject.productionCountry?.allObjects as? [ProductionCountriesData]
             else { return nil }
             for genreData in genresData {
                 let genre = Genre(name: genreData.name ?? "")

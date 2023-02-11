@@ -56,6 +56,7 @@ final class MoviesListTableViewCell: UITableViewCell {
     }
 
     override func prepareForReuse() {
+        super.prepareForReuse()
         posterImageView.image = nil
     }
 

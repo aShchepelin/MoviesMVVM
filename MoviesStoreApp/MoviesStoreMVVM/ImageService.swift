@@ -7,14 +7,16 @@ import Foundation
 final class ImageService: ImageServiceProtocol {
     // MARK: - Private Properties
 
-    private let imageAPIService = ImageAPIService()
-    private let fileManagerService = FileManagerService()
+    private let proxy: ProxyProtocol?
+
+    init(proxy: ProxyProtocol?) {
+        self.proxy = proxy
+    }
 
     // MARK: - Public Methods
 
     func getPhoto(byUrl url: String, completion: @escaping (Result<Data, Error>) -> Void) {
-        let proxy = Proxy(imageAPIService: imageAPIService, fileManagerService: fileManagerService)
-        proxy.loadImage(url: url) { result in
+        proxy?.loadImage(url: url) { result in
             switch result {
             case let .success(image):
                 completion(.success(image))
