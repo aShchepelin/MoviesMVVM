@@ -1,5 +1,5 @@
 // MovieInfoTableViewCell.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import SafariServices
 import UIKit
@@ -125,28 +125,36 @@ final class MovieInfoTableViewCell: UITableViewCell {
     // MARK: - Public Methods
 
     func configure(_ model: MovieInfo, movieInfoViewModel: MovieInfoViewModelProtocol) {
-        var genres = ""
-        var countries = ""
-        for item in model.genres {
-            genres += " \(item.name)"
-        }
-        for item in model.productionCountries {
-            countries += " \(item.name)"
-        }
-        let year = model.releaseDate.components(separatedBy: Constants.separator)
         titleLabel.text = model.title
         fetchImage(
             url: model.poster,
             movieInfoViewModel: movieInfoViewModel
         )
-        yearAndGenresLabel.text = "\(year.first ?? "") \(genres)"
         originalTitleLabel.text = "\(model.originalTitle)"
-        countryAndRuntimeLabel.text = "\(countries), \((model.runtime) / Constants.oneMinuteInSeconds) " +
-            "\(Constants.hoursText) \((model.runtime) % Constants.oneMinuteInSeconds) \(Constants.minutesText)"
         overviewLabel.text = model.overview
+        getGenres(model)
+        getCountryAndRuntime(model)
     }
 
     // MARK: - Private Methods
+
+    private func getCountryAndRuntime(_ model: MovieInfo) {
+        var countries = ""
+        for item in model.productionCountries {
+            countries += " \(item.name)"
+        }
+        countryAndRuntimeLabel.text = "\(countries), \(Int(model.runtime) / Constants.oneMinuteInSeconds) " +
+            "\(Constants.hoursText) \(Int(model.runtime) % Constants.oneMinuteInSeconds) \(Constants.minutesText)"
+    }
+
+    private func getGenres(_ model: MovieInfo) {
+        var genres = ""
+        for item in model.genres {
+            genres += " \(item.name)"
+        }
+        let year = model.releaseDate.components(separatedBy: Constants.separator)
+        yearAndGenresLabel.text = "\(year.first ?? "") \(genres)"
+    }
 
     private func fetchImage(url: String, movieInfoViewModel: MovieInfoViewModelProtocol) {
         movieInfoViewModel.fetchImage(url: url) { [weak self] result in

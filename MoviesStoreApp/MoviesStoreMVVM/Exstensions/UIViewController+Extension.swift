@@ -1,5 +1,5 @@
 // UIViewController+Extension.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import UIKit
 
@@ -23,5 +23,28 @@ extension UIViewController {
         )
         alertController.addAction(alertControllerAction)
         present(alertController, animated: true)
+    }
+
+    func showKeyChainAlert(
+        title: String?,
+        message: String?,
+        actionTitle: String?,
+        handler: StrindHandler
+    ) {
+        let keyChainAlertController = UIAlertController(
+            title: title,
+            message: message,
+            preferredStyle: .alert
+        )
+        let keyChainAlertControllerAction = UIAlertAction(
+            title: actionTitle,
+            style: .default
+        ) { _ in
+            let result = keyChainAlertController.textFields?.first?.text ?? ""
+            handler?(result)
+        }
+        keyChainAlertController.addTextField()
+        keyChainAlertController.addAction(keyChainAlertControllerAction)
+        present(keyChainAlertController, animated: true)
     }
 }

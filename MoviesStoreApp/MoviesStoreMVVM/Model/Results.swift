@@ -1,5 +1,5 @@
 // Results.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import Foundation
 
@@ -10,5 +10,5 @@ struct Results: Codable {
     }
 
     /// Фильмы
-    let movies: [Movies]
+    let movies: [Movie]
 }

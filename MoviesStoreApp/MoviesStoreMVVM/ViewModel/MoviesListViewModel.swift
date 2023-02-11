@@ -1,5 +1,5 @@
 // MoviesListViewModel.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import Foundation
 
@@ -10,36 +10,47 @@ final class MoviesListViewModel: MoviesListViewModelProtocol {
     var showErrorAlert: ErrorHandler?
     var moviesAPIService: MoviesAPIServiceProtocol
     var updateView: VoidHandler?
+    var coreDataErrorHandler: CoreDataHandler?
     var moviesListState: ((MoviesListStates) -> ())?
-    var movies: [Movies] = []
+    var movies: [Movie] = []
 
     // MARK: - Private Properties
 
     private let networkService: NetworkServiceProtocol
+    private var coreDataService: CoreDataServiceProtocol?
     private var imageService: ImageServiceProtocol
+    private var keyChainService: KeyChainServiceProtocol
 
     // MARK: - Init
 
     init(
         networkService: NetworkServiceProtocol,
         imageService: ImageServiceProtocol,
-        moviesAPIService: MoviesAPIServiceProtocol
+        moviesAPIService: MoviesAPIServiceProtocol,
+        keyChainService: KeyChainServiceProtocol,
+        coreDataService: CoreDataServiceProtocol
     ) {
         self.networkService = networkService
         self.imageService = imageService
         self.moviesAPIService = moviesAPIService
+        self.keyChainService = keyChainService
+        self.coreDataService = coreDataService
     }
 
     // MARK: - Public Methods
 
+    func keyChainInfo() -> KeyChainServiceProtocol? {
+        keyChainService
+    }
+
     func fetchTypeMovies(index: Int) {
         switch index {
         case 0:
-            fetchMovies(movieType: URLRequest.topRatedRequest)
+            loadData(movieType: URLRequest.topRatedRequest)
         case 1:
-            fetchMovies(movieType: URLRequest.popularRequest)
+            loadData(movieType: URLRequest.popularRequest)
         case 2:
-            fetchMovies(movieType: URLRequest.upcomingRequest)
+            loadData(movieType: URLRequest.upcomingRequest)
         default:
             break
         }
@@ -57,16 +68,27 @@ final class MoviesListViewModel: MoviesListViewModelProtocol {
     }
 
     func fetchMoviesData() {
-        fetchMovies(movieType: URLRequest.popularRequest)
+        loadData(movieType: URLRequest.popularRequest)
     }
 
     // MARK: - Private Methods
+
+    private func loadData(movieType: String) {
+        guard let movies = coreDataService?.getMovieData(movieType: movieType) else { return }
+        if !movies.isEmpty {
+            self.movies = movies
+            moviesListState?(.success)
+        } else {
+            fetchMovies(movieType: movieType)
+        }
+    }
 
     private func fetchMovies(movieType: String) {
         networkService.fetchMovies(moviesType: movieType) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .success(movie):
+                self.coreDataService?.saveMovieDataContext(movies: movie, movieType: movieType)
                 self.movies = movie
                 self.moviesListState?(.success)
             case let .failure(error):

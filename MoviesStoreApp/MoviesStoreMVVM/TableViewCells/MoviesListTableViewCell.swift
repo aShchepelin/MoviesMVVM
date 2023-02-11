@@ -1,5 +1,5 @@
 // MoviesListTableViewCell.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import UIKit
 
@@ -55,9 +55,14 @@ final class MoviesListTableViewCell: UITableViewCell {
         setupUI()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        posterImageView.image = nil
+    }
+
     // MARK: - Public Methods
 
-    func configure(_ model: Movies, moviesListViewModel: MoviesListViewModelProtocol) {
+    func configure(_ model: Movie, moviesListViewModel: MoviesListViewModelProtocol) {
         titleLabel.text = model.title
         fetchImage(
             url: model.poster,

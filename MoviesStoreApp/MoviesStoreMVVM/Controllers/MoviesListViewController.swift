@@ -1,5 +1,5 @@
 // MoviesListViewController.swift
-// Copyright © RoadMap. All rights reserved.
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 import UIKit
 
@@ -44,7 +44,34 @@ final class MoviesListViewController: UIViewController {
 
     // MARK: - Private methods
 
+    private func keyChainAlert() {
+        showKeyChainAlert(
+            title: Constants.alertTitleText,
+            message: Constants.alertMessageText,
+            actionTitle: Constants.actionTitle
+        ) { [weak self] apiKey in
+            guard let self = self else { return }
+            self.moviesListViewModel?.keyChainInfo()?.setValue(
+                apiKey,
+                forKey: Constants.keyChainKey
+            )
+            self.fetchMoviesList()
+            self.moviesListTableView.reloadData()
+        }
+    }
+
+    private func showCoreDataErrorAlert() {
+        moviesListViewModel?.coreDataErrorHandler = { [weak self] error in
+            DispatchQueue.main.async {
+                self?.showCoreDataAlert(error: error)
+            }
+        }
+    }
+
     private func initialStateView() {
+        if moviesListViewModel?.keyChainInfo()?.getValue(Constants.keyChainKey) == Constants.emptyString {
+            keyChainAlert()
+        }
         setupUI()
         activityIndicatorView.startAnimating()
         moviesListTableView.isHidden = true
@@ -78,6 +105,7 @@ final class MoviesListViewController: UIViewController {
         setupConstraints()
         moviesListTableView.delegate = self
         moviesListTableView.dataSource = self
+        showCoreDataErrorAlert()
     }
 
     private func addSegmentControl() {
@@ -156,6 +184,15 @@ extension MoviesListViewController: AlertDelegateProtocol {
         showAlert(
             title: Constants.errorTitle,
             message: error.localizedDescription,
+            actionTitle: Constants.actionTitle,
+            handler: nil
+        )
+    }
+
+    func showCoreDataAlert(error: String) {
+        showAlert(
+            title: Constants.errorTitle,
+            message: error,
             actionTitle: Constants.actionTitle,
             handler: nil
         )

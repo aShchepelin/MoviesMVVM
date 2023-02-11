@@ -1,15 +1,14 @@
-// Movies.swift
-// Copyright © RoadMap. All rights reserved.
+// Movie.swift
+// Copyright © Aleksandr Shchepelin. All rights reserved.
 
 /// Модель фильмов
-struct Movies: Codable {
+struct Movie: Codable {
     enum CodingKeys: String, CodingKey {
         case poster = "poster_path"
         case adult
         case originalTitle = "original_title"
         case overview
         case releaseDate = "release_date"
-        case genre = "genre_ids"
         case movieId = "id"
         case title
         case popularity
@@ -27,8 +26,6 @@ struct Movies: Codable {
     let overview: String
     /// Дата релиза
     let releaseDate: String
-    /// Жанр
-    let genre: [Int]
     /// Идентификатор фильма
     let movieId: Int
     /// Название
