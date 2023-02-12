@@ -11,8 +11,8 @@ protocol MoviesListViewModelProtocol {
     var movies: [Movie] { get }
     var moviesAPIService: MoviesAPIServiceProtocol { get }
     var moviesListState: ((MoviesListStates) -> ())? { get set }
+    var movieCategory: MovieCategory { get set }
 
-    func fetchMoviesData()
     func fetchTypeMovies(index: Int)
     func fetchImage(url: String, completion: @escaping (Result<Data, Error>) -> Void)
     func keyChainInfo() -> KeyChainServiceProtocol?

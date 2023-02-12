@@ -35,7 +35,12 @@ final class MovieInfoViewModel: MovieInfoViewModelProtocol {
     // MARK: - Public Methods
 
     func loadMovieInfo() {
-        loadData()
+        guard let movieInfo = coreDataService?.getMovieInfoData(movieID: movieID ?? 0) else {
+            fetchMovieInfo()
+            return
+        }
+        self.movieInfo = movieInfo
+        updateView?()
     }
 
     func fetchImage(url: String, completion: @escaping (Result<Data, Error>) -> Void) {
@@ -50,15 +55,6 @@ final class MovieInfoViewModel: MovieInfoViewModelProtocol {
     }
 
     // MARK: - Private Methods
-
-    private func loadData() {
-        guard let movieInfo = coreDataService?.getMovieInfoData(movieID: movieID ?? 0) else {
-            fetchMovieInfo()
-            return
-        }
-        self.movieInfo = movieInfo
-        updateView?()
-    }
 
     private func fetchMovieInfo() {
         networkService?.fetchMovieInfo(movieID: movieID ?? 0) { [weak self] result in

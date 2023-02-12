@@ -13,6 +13,7 @@ final class MoviesListViewModel: MoviesListViewModelProtocol {
     var coreDataErrorHandler: CoreDataHandler?
     var moviesListState: ((MoviesListStates) -> ())?
     var movies: [Movie] = []
+    var movieCategory: MovieCategory = .popular
 
     // MARK: - Private Properties
 
@@ -46,14 +47,15 @@ final class MoviesListViewModel: MoviesListViewModelProtocol {
     func fetchTypeMovies(index: Int) {
         switch index {
         case 0:
-            loadData(movieType: URLRequest.topRatedRequest)
+            movieCategory = .topRated
         case 1:
-            loadData(movieType: URLRequest.popularRequest)
+            movieCategory = .popular
         case 2:
-            loadData(movieType: URLRequest.upcomingRequest)
+            movieCategory = .upcoming
         default:
             break
         }
+        loadData(movieType: movieCategory.rawValue)
     }
 
     func fetchImage(url: String, completion: @escaping (Result<Data, Error>) -> Void) {
@@ -65,10 +67,6 @@ final class MoviesListViewModel: MoviesListViewModelProtocol {
                 completion(.failure(error))
             }
         }
-    }
-
-    func fetchMoviesData() {
-        loadData(movieType: URLRequest.popularRequest)
     }
 
     // MARK: - Private Methods
