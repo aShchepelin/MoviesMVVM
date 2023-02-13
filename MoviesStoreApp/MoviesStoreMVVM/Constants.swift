@@ -25,6 +25,7 @@ enum URLRequest {
     static let creditsURL = "/credits"
 }
 
+/// Константы кор даты сервиса
 enum CoreDataConstants {
     static let movieInfoData = "MovieInfoData"
     static let movieData = "MovieData"
@@ -51,4 +52,14 @@ enum Constants {
     static let alertTitleText = "Вход в приложение"
     static let alertMessageText = "Введите ключ"
     static let emptyString = ""
+    static let launchScreen = "Launch Screen"
+}
+
+/// Константы Unit Test
+enum UnitTest {
+    static let foo = "foo"
+    static let keyChainForKey = "key"
+    static let mockMovieJSON = "MockMovie"
+    static let jsonType = "json"
+    static let mockMovieInfoJSON = "MockMovieInfo"
 }

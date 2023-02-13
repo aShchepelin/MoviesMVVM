@@ -148,7 +148,7 @@ final class MoviesListViewController: UIViewController {
     }
 
     private func fetchMoviesList() {
-        moviesListViewModel?.fetchMoviesData()
+        moviesListViewModel?.fetchTypeMovies(index: 1)
     }
 }
 
