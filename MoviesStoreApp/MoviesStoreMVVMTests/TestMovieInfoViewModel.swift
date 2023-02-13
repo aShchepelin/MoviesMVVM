@@ -4,6 +4,7 @@
 @testable import MoviesStoreMVVM
 import XCTest
 
+/// Тест экрана с подробной информацией о фильме
 final class TestMovieInfoViewModel: XCTestCase {
     // MARK: - Private Properties
 
@@ -19,6 +20,7 @@ final class TestMovieInfoViewModel: XCTestCase {
     // MARK: - Public Methods
 
     override func setUp() {
+        super.setUp()
         movieInfoViewModel = MovieInfoViewModel(
             networkService: networkService,
             movieID: movieID,

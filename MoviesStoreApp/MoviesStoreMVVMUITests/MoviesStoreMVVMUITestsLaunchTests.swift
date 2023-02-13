@@ -3,6 +3,7 @@
 
 import XCTest
 
+/// Тест работы интерфейса при запуске приложения
 final class MoviesStoreMVVMUITestsLaunchTests: XCTestCase {
     // MARK: - Private Enum
 

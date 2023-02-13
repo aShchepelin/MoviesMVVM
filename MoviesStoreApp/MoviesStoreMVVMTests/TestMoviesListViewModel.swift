@@ -21,6 +21,7 @@ final class TestMoviesListViewModel: XCTestCase {
     // MARK: - Public Methods
 
     override func setUp() {
+        super.setUp()
         moviesListViewModel = MoviesListViewModel(
             networkService: networkService,
             imageService: imageService,
@@ -42,9 +43,9 @@ final class TestMoviesListViewModel: XCTestCase {
             }
         }
     }
-
+    
     func testKeyCheyInfo() {
-        XCTAssertNoThrow(moviesListViewModel?.keyChainInfo())
+       XCTAssertNoThrow(moviesListViewModel?.keyChainInfo())
     }
 
     func testKeyChainSetValue() {
