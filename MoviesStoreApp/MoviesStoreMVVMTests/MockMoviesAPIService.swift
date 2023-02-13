@@ -6,6 +6,9 @@ import Foundation
 
 /// Мок сервиса по запросу API
 final class MockMoviesAPIService: MoviesAPIServiceProtocol {
+    
+    // MARK: - Public Methods
+    
     func sendMoviesRequest(movieType: String, completion: @escaping (Result<MoviesStoreMVVM.Results, Error>) -> Void) {
         guard let jsonURL = Bundle.main.path(forResource: UnitTest.mockMovieJSON, ofType: UnitTest.jsonType)
         else { return }

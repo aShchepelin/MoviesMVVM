@@ -17,7 +17,7 @@ final class MoviesStoreMVVMUITests: XCTestCase {
         static let soonSegmentName = "Скоро"
     }
 
-    // MARK: - Public Properties
+    // MARK: - Public Methods
 
     override func setUpWithError() throws {
         continueAfterFailure = false

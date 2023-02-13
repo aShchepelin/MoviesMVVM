@@ -6,7 +6,7 @@ import XCTest
 
 /// Текст прокси
 final class TestProxy: XCTestCase {
-    // MARK: - Constants
+    // MARK: - Private Enum
 
     private enum Constants {
         static let mockUrl = "foo"

@@ -6,7 +6,7 @@ import Foundation
 
 /// Мок сервиса файл менеджера
 final class MockFileManagerService: FileManagerServiceProtocol {
-    // MARK: - Constants
+    // MARK: - Private Enum
 
     private enum Constants {
         static let mockUrl = "foo"

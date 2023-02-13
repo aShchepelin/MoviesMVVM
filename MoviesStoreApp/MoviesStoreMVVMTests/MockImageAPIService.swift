@@ -6,7 +6,7 @@ import Foundation
 
 /// Мок сервиса по загрузке картинок
 final class MockImageAPIService: ImageAPIServiceProtocol {
-    // MARK: - Constants
+    // MARK: - Private Enum
 
     private enum Constants {
         static let mockImageUrl = "foo"
